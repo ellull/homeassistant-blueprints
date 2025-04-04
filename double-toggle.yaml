@@ -1,0 +1,44 @@
+blueprint:
+  name: Double Toggle
+  description: Executes an action after an event entity changes state twice in a short time.
+  domain: automation
+  author: Eduard Llull
+  input:
+    trigger_entity:
+      name: Trigger Entity
+      description: The entity to watch.
+      selector:
+        entity:
+          filter:
+            - domain: event
+
+    max_delay:
+      name: Maximum Delay
+      description: Maximum time between the two changes.
+      selector:
+        duration:
+          enable_day: false
+          enable_millisecond: true
+
+    target_actions:
+      name: Actions
+      description: Actions to execute.
+      selector:
+        action:
+
+mode: single
+max_exceeded: silent
+
+triggers:
+  - trigger: state
+    entity_id: !input trigger_entity
+
+actions:
+  - wait_for_trigger:
+      - trigger: state
+        entity_id: !input trigger_entity
+    timeout:
+      !input max_delay
+    continue_on_timeout: false
+
+  !input target_actions
