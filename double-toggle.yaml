@@ -41,5 +41,4 @@ actions:
       !input max_delay
     continue_on_timeout: false
 
-  - action:
-    - sequence: !input target_actions
+  - sequence: !input target_actions
