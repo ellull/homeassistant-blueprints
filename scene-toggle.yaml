@@ -1,0 +1,83 @@
+blueprint:
+  name: Scene Toggle
+  description: Cycles among a list of scenes when toggling rapidly or turns off a light.
+  domain: automation
+  author: Eduard Llull
+  input:
+    triggers:
+      name: Triggers
+      selector:
+        trigger:
+
+    light:
+      name: Light
+      selector:
+        entity:
+          filter:
+            domain: light
+
+    scenes:
+      name: Scenes
+      selector:
+        entity:
+          multiple: true
+          filter:
+            domain: scene
+
+    transition:
+      name: Transition time
+      description: Transition time when switching between scenes.
+      default: 1
+      selector:
+        number:
+          min: 0
+          max: 10
+          step: 0.1
+          unit_of_measurement: s
+
+    max_delay:
+      name: Maximum Delay
+      description: Maximum time to wait for another trigger.
+      default: 00:00:00.500
+      selector:
+        duration:
+          enable_day: false
+          enable_millisecond: true
+
+mode: single
+max_exceeded: silent
+
+variables:
+  scenes: !input scenes
+
+triggers: !input triggers
+
+actions:
+  - if:
+      - condition: state
+        entity_id: !input light
+        state: "on"
+    then:
+      - action: light.turn_off
+        metadata: {}
+        data: {}
+        target:
+          entity_id: !input light
+    else:
+      - action: select.select_first
+        metadata: {}
+        data: {}
+        target:
+          entity_id: select.lampara_despacho_scene
+      - repeat:
+          while: {{ True }}
+          sequence:
+            - service: scene.turn_on
+              data_template:
+                transition: !input transition
+                entity_id: {{ scenes[(repeat.index - 1) % len(scenes)] }}
+            - wait_for_trigger:
+                - triggers: !input triggers
+              timeout:
+                !input max_delay
+              continue_on_timeout: false
