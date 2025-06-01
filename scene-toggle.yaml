@@ -72,6 +72,10 @@ actions:
       - repeat:
           while: "{{ True }}"
           sequence:
+            - service: scene.turn_on
+              data_template:
+                transition: !input transition
+                entity_id: "{{ scenes[0] }}"
             - wait_for_trigger:
                 - triggers: !input triggers
               timeout:
