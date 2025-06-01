@@ -70,7 +70,7 @@ actions:
         target:
           entity_id: select.lampara_despacho_scene
       - repeat:
-          while: {{ True }}
+          while: "{{ True }}"
           sequence:
             - service: scene.turn_on
               data_template:
