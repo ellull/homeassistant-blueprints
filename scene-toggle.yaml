@@ -38,7 +38,7 @@ blueprint:
     max_delay:
       name: Maximum Delay
       description: Maximum time to wait for another trigger.
-      default: 00:00:00.500
+      default: 00:00:00:500
       selector:
         duration:
           enable_day: false
