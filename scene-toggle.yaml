@@ -38,7 +38,11 @@ blueprint:
     max_delay:
       name: Maximum Delay
       description: Maximum time to wait for another trigger.
-      default: 00:00:00:500
+      default:
+        hours: 0
+        minutes: 0
+        seconds: 1
+        milliseconds: 0
       selector:
         duration:
           enable_day: false
@@ -64,11 +68,6 @@ actions:
         target:
           entity_id: !input light
     else:
-      - action: select.select_first
-        metadata: {}
-        data: {}
-        target:
-          entity_id: select.lampara_despacho_scene
       - repeat:
           while: "{{ True }}"
           sequence:
