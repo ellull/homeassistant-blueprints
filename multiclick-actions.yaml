@@ -48,8 +48,7 @@ blueprint:
   max_exceeded: silent
 
   triggers:
-  - alias: Event state trigger
-    trigger: state
+  - trigger: state
     entity_id: !input trigger_entity
 
   conditions:
@@ -75,8 +74,7 @@ blueprint:
           - alias: Increment number of clicks
             variables:
               clicks: "{{ clicks + 1 }}"
-          - alias: Wait for next event
-            wait_for_trigger:
+          - wait_for_trigger:
               - alias: Event state trigger
                 trigger: state
                 entity_id: !input trigger_entity
