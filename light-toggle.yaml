@@ -19,14 +19,9 @@ blueprint:
             domain: light
           multiple: true
 
-    has_transition:
+    transition:
       name: Transition
       description: Duration it takes to get to next state.
-      default: false
-      selector:
-        boolean:
-
-    transition:
       default:
       selector:
         number:
@@ -34,6 +29,28 @@ blueprint:
           max: 300
           step: 1
           unit_of_measurement: seconds
+
+    color_temp_kelvin:
+      name: Color temperature
+      description: Color temperature in Kelvin.
+      default:
+      selector:
+        color_temp:
+          unit: kelvin
+          min: 2000
+          max: 8000
+
+    brightness_pct:
+      name: Brightness
+      description: Number indicating the percentage of full brightness, where 0 turns the light off, 1 is the minimum brightness, and 100 is the maximum brightness.
+      default:
+      selector:
+        number:
+          min: 0
+          max: 100
+          step: 1
+          unit_of_measurement: "%"
+          mode: slider
 
 mode: single
 max_exceeded: silent
@@ -46,6 +63,6 @@ actions:
     target:
       entity_id: !input lights
     data:
-      brightness_pct: 100
-      color_temp_kelvin: 2702
+      brightness_pct: !input brightness_pct
+      color_temp_kelvin: !input color_temp_kelvin
       transition: !input transition
