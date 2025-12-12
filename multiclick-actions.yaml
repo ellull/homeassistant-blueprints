@@ -47,6 +47,10 @@ blueprint:
 mode: single
 max_exceeded: silent
 
+variables:
+  event_type: !input event_type
+  num_events: !input num_events
+
 triggers:
 - trigger: state
   entity_id: !input trigger_entity
@@ -54,7 +58,7 @@ triggers:
 conditions:
   - alias: event_type is `event_type`
     condition: template
-    value_template: "{{ trigger.to_state.attributes.event_type == '!input event_type' }}"
+    value_template: "{{ trigger.to_state.attributes.event_type == event_type }}"
 
 actions:
   - alias: Define 'clicks' variable
@@ -65,11 +69,7 @@ actions:
       until:
         - alias: Trigger timed out or event_type is not `event_type`
           condition: template
-          value_template: >-
-            {{ 
-              not wait.trigger or
-              wait.trigger.to_state.attributes.event_type != '!input event_type'
-            }}
+          value_template: "{{ not wait.trigger or wait.trigger.to_state.attributes.event_type != event_type }}"
       sequence:
         - alias: Increment number of clicks
           variables:
@@ -84,7 +84,7 @@ actions:
     if:
       - alias: If `num_events` clicks
         condition: template
-        value_template: "{{ clicks == !input num_events }}"
+        value_template: "{{ clicks == num_events }}"
     then:
       - alias: Execute actions
         sequence: !input target_actions
