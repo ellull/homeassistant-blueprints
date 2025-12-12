@@ -1,0 +1,44 @@
+blueprint:
+  name: Light Toggle
+  description: Toggles a light.
+  domain: automation
+  author: Eduard Llull
+  input:
+    triggers:
+      name: Triggers
+      selector:
+        trigger:
+
+    lights:
+      name: Lights
+      selector:
+        entity:
+          filter:
+            domain: light
+        multiple: true
+        
+    transition:
+      name: Transition time
+      description: Transition time when switching between scenes.
+      default:
+      selector:
+        number:
+          min: 0
+          max: 300
+          step: 1
+          unit_of_measurement: seconds
+
+mode: single
+max_exceeded: silent
+
+triggers: !input triggers
+
+actions:
+  - action: light.toggle
+    metadata: {}
+    target:
+      entity_id: !input lights
+    data:
+      brightness_pct: 100
+      color_temp_kelvin: 2702
+      transition: !input transition
