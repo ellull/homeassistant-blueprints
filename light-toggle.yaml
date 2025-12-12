@@ -6,20 +6,27 @@ blueprint:
   input:
     triggers:
       name: Triggers
+      description: What will trigger the light toggle.
       selector:
         trigger:
 
     lights:
       name: Lights
+      description: Lights to toggle.
       selector:
         entity:
           filter:
             domain: light
           multiple: true
-        
+
+    has_transition:
+      name: Transition
+      description: Duration it takes to get to next state.
+      default: false
+      selector:
+        boolean:
+
     transition:
-      name: Transition time
-      description: Transition time when switching between scenes.
       default:
       selector:
         number:
