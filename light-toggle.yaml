@@ -15,7 +15,7 @@ blueprint:
         entity:
           filter:
             domain: light
-        multiple: true
+          multiple: true
         
     transition:
       name: Transition time
