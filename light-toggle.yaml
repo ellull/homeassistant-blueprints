@@ -75,8 +75,7 @@ blueprint:
               max: 8000
     
 
-mode: single
-max_exceeded: silent
+mode: queued
 
 variables:
   include_light_control: !input include_light_control
