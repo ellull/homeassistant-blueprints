@@ -52,7 +52,7 @@ blueprint:
     entity_id: !input trigger_entity
 
   conditions:
-    - alias: event_type is '!input event_type'
+    - alias: event_type is `event_type`
       condition: template
       value_template: "{{ trigger.to_state.attributes.event_type == '!input event_type' }}"
 
@@ -63,7 +63,7 @@ blueprint:
     - alias: Wait for more clicks
       repeat:
         until:
-          - alias: Trigger timed out or event_type is not '!input event_type'
+          - alias: Trigger timed out or event_type is not `event_type`
             condition: template
             value_template: >-
               {{ 
@@ -82,7 +82,7 @@ blueprint:
               !input max_delay
     - alias: Execute actions if required number of clicks happend
       if:
-        - alias: If !input num_events clicks
+        - alias: If `num_events` clicks
           condition: template
           value_template: "{{ clicks == !input num_events }}"
       then:
