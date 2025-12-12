@@ -75,7 +75,7 @@ blueprint:
               max: 8000
     
 
-mode: queued
+mode: restart
 
 variables:
   include_light_control: !input include_light_control
