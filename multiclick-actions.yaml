@@ -15,6 +15,7 @@ blueprint:
     event_type:
       name: Event Type
       description: The type of the event.
+      default: 'on'
       selector:
         text:
           multiline: false
@@ -23,6 +24,7 @@ blueprint:
     num_events:
       name: Number of events
       description: The number of events that must happen to execute the actions.
+      default: 2
       selector:
         number:
           min: 1
@@ -33,6 +35,8 @@ blueprint:
     max_delay:
       name: Maximum Delay
       description: Maximum time between the two events.
+      default:
+        milliseconds: 500
       selector:
         duration:
           enable_day: false
