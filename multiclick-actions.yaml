@@ -1,0 +1,92 @@
+blueprint:
+  name: Multiple events actions
+  description: Executes actions after an event entity reports same event type several times in a row for a short time.
+  domain: automation
+  author: Eduard Llull
+  input:
+    trigger_entity:
+      name: Trigger Entity
+      description: The entity to watch.
+      selector:
+        entity:
+          filter:
+            - domain: event
+
+    event_type:
+      name: Event Type
+      description: The type of the event.
+      selector:
+        text:
+          multiline: false
+          multiple: false
+
+    num_events:
+      name: Number of events
+      description: The number of events that must happen to execute the actions.
+      selector:
+        number:
+          min: 1
+          step: 1
+          unit_of_measurement: events
+          mode: box
+
+    max_delay:
+      name: Maximum Delay
+      description: Maximum time between the two events.
+      selector:
+        duration:
+          enable_day: false
+          enable_millisecond: true
+
+    target_actions:
+      name: Actions
+      description: Actions to execute.
+      selector:
+        action:
+
+  mode: single
+  max_exceeded: silent
+
+  triggers:
+  - alias: Event state trigger
+    trigger: state
+    entity_id: !input trigger_entity
+
+  conditions:
+    - alias: event_type is '!input event_type'
+      condition: template
+      value_template: "{{ trigger.to_state.attributes.event_type == '!input event_type' }}"
+
+  actions:
+    - alias: Define 'clicks' variable
+      variables:
+        clicks: 0
+    - alias: Wait for more clicks
+      repeat:
+        until:
+          - alias: Trigger timed out or event_type is not '!input event_type'
+            condition: template
+            value_template: >-
+              {{ 
+                not wait.trigger or
+                wait.trigger.to_state.attributes.event_type != '!input event_type'
+              }}
+        sequence:
+          - alias: Increment number of clicks
+            variables:
+              clicks: "{{ clicks + 1 }}"
+          - alias: Wait for next event
+            wait_for_trigger:
+              - alias: Event state trigger
+                trigger: state
+                entity_id: !input trigger_entity
+            timeout:
+              !input max_delay
+    - alias: Execute actions if required number of clicks happend
+      if:
+        - alias: If !input num_events clicks
+          condition: template
+          value_template: "{{ clicks == !input num_events }}"
+      then:
+        - alias: Execute actions
+          sequence: !input target_actions
