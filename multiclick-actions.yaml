@@ -44,47 +44,47 @@ blueprint:
       selector:
         action:
 
-  mode: single
-  max_exceeded: silent
+mode: single
+max_exceeded: silent
 
-  triggers:
-  - trigger: state
-    entity_id: !input trigger_entity
+triggers:
+- trigger: state
+  entity_id: !input trigger_entity
 
-  conditions:
-    - alias: event_type is `event_type`
-      condition: template
-      value_template: "{{ trigger.to_state.attributes.event_type == '!input event_type' }}"
+conditions:
+  - alias: event_type is `event_type`
+    condition: template
+    value_template: "{{ trigger.to_state.attributes.event_type == '!input event_type' }}"
 
-  actions:
-    - alias: Define 'clicks' variable
-      variables:
-        clicks: 0
-    - alias: Wait for more clicks
-      repeat:
-        until:
-          - alias: Trigger timed out or event_type is not `event_type`
-            condition: template
-            value_template: >-
-              {{ 
-                not wait.trigger or
-                wait.trigger.to_state.attributes.event_type != '!input event_type'
-              }}
-        sequence:
-          - alias: Increment number of clicks
-            variables:
-              clicks: "{{ clicks + 1 }}"
-          - wait_for_trigger:
-              - alias: Event state trigger
-                trigger: state
-                entity_id: !input trigger_entity
-            timeout:
-              !input max_delay
-    - alias: Execute actions if required number of clicks happend
-      if:
-        - alias: If `num_events` clicks
+actions:
+  - alias: Define 'clicks' variable
+    variables:
+      clicks: 0
+  - alias: Wait for more clicks
+    repeat:
+      until:
+        - alias: Trigger timed out or event_type is not `event_type`
           condition: template
-          value_template: "{{ clicks == !input num_events }}"
-      then:
-        - alias: Execute actions
-          sequence: !input target_actions
+          value_template: >-
+            {{ 
+              not wait.trigger or
+              wait.trigger.to_state.attributes.event_type != '!input event_type'
+            }}
+      sequence:
+        - alias: Increment number of clicks
+          variables:
+            clicks: "{{ clicks + 1 }}"
+        - wait_for_trigger:
+            - alias: Event state trigger
+              trigger: state
+              entity_id: !input trigger_entity
+          timeout:
+            !input max_delay
+  - alias: Execute actions if required number of clicks happend
+    if:
+      - alias: If `num_events` clicks
+        condition: template
+        value_template: "{{ clicks == !input num_events }}"
+    then:
+      - alias: Execute actions
+        sequence: !input target_actions
