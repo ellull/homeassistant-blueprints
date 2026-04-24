@@ -16,7 +16,6 @@ blueprint:
       selector:
         target:
           entity:
-            filter:
               - domain: input_text
 
 triggers:
