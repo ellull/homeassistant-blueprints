@@ -10,7 +10,7 @@ blueprint:
         target:
           entity:
             - domain: light
-    test_input:
+    text_input:
       name: Text Input
       description: Text input to save the attributes to.
       selector:
