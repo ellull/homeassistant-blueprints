@@ -23,10 +23,8 @@ triggers:
     entity_id: !input track_light
 
 conditions:
-  - condition: state
-    entity_id: !input track_light
-    state:
-      - "on"
+  - condition: template
+    value_template: "{{ trigger.to_state.state == 'on' }}"
 
 actions:
   - action: input_text.set_value
