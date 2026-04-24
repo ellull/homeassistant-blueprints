@@ -3,35 +3,36 @@ blueprint:
   description: Saves the attributes of a light every time they change.
   domain: automation
   input:
-    target_light:
+    track_light:
       name: Light
       description: The light to track.
       selector:
         target:
           entity:
             - domain: light
-    text_input:
+    target_input_text:
       name: Text Input
       description: Text input to save the attributes to.
       selector:
         entity:
           filter:
-            - domain: text_input
+            - domain: input_text
 
 triggers:
   - trigger: state
-    entity_id: !input target_light
+    entity_id: !input track_light
 
 conditions:
   - condition: state
-    entity_id: !input target_light
+    entity_id: !input track_light
     state:
       - "on"
+
 actions:
   - action: input_text.set_value
     metadata: {}
     target:
-      entity_id: !input text_input
+      entity_id: !input target_input_text
     data:
       value: |
         {{
