@@ -1,0 +1,44 @@
+blueprint:
+  name: Save Light Last Attributes
+  description: Saves the attributes of a light every time they change.
+  domain: automation
+  input:
+    target_light:
+      name: Light
+      description: The light to track.
+      selector:
+        target:
+          entity:
+            - domain: light
+    test_input:
+      name: Text Input
+      description: Text input to save the attributes to.
+      selector:
+        entity:
+          filter:
+            - domain: text_input
+
+triggers:
+  - trigger: state
+    entity_id: !input target_light
+
+conditions:
+  - condition: state
+    entity_id: !input target_light
+    state:
+      - "on"
+actions:
+  - action: input_text.set_value
+    metadata: {}
+    target:
+      entity_id: !input text_input
+    data:
+      value: |
+        {{
+          {
+            "brightness": trigger.to_state.attributes.brightness,
+            "color_temp_kelvin": trigger.to_state.attributes.color_temp_kelvin,
+          } | to_json
+        }}
+
+mode: restart
