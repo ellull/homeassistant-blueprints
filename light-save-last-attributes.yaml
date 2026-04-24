@@ -7,16 +7,17 @@ blueprint:
       name: Light
       description: The light to track.
       selector:
-        target:
-          entity:
+        entity:
+          filter:
             - domain: light
     target_input_text:
       name: Text Input
       description: Text input to save the attributes to.
       selector:
-        entity:
-          filter:
-            - domain: input_text
+        target:
+          entity:
+            filter:
+              - domain: input_text
 
 triggers:
   - trigger: state
@@ -29,8 +30,7 @@ conditions:
 actions:
   - action: input_text.set_value
     metadata: {}
-    target:
-      entity_id: !input target_input_text
+    target: !input target_input_text
     data:
       value: |
         {{
