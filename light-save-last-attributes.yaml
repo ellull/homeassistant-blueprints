@@ -20,11 +20,11 @@ blueprint:
 
 triggers:
   - trigger: state
-    entity_id: !input track_light
+    !input track_light
 
 conditions:
   - condition: state
-    entity_id: !input track_light
+    !input track_light
     state:
       - "on"
 
